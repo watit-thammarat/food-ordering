@@ -37,6 +37,11 @@ authentication_failure = {
     'status': status.HTTP_401_UNAUTHORIZED
 }
 
+invalid_admin = {
+    'message': 'Invalid administrator',
+    'status': status.HTTP_401_UNAUTHORIZED
+}
+
 internal_server_error = {
     'message': 'Internal Server Error',
     'status': status.HTTP_500_INTERNAL_SERVER_ERROR
