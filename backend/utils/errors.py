@@ -27,9 +27,19 @@ password_is_required = {
     'status': status.HTTP_400_BAD_REQUEST
 }
 
-menu_not_found = {
-    'message': 'Menu not found',
-    'status': status.HTTP_404_NOT_FOUND
+invalid_date = {
+    'message': 'Invalid date',
+    'status': status.HTTP_400_BAD_REQUEST
+}
+
+invalid_order_date = {
+    'message': 'Invalid order date',
+    'status': status.HTTP_400_BAD_REQUEST
+}
+
+invalid_menu_id = {
+    'message': 'Invalid menu id',
+    'status': status.HTTP_400_BAD_REQUEST
 }
 
 authentication_failure = {
