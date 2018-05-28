@@ -3,10 +3,60 @@ from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.db.models import Q
+from django.contrib.auth import authenticate
+from django.contrib.auth.models import User
+from rest_framework_jwt.settings import api_settings
 
 from order.models import Menu
 from shared import errors
 from shared.http_exception import HttpException
+
+jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
+jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
+
+
+@api_view(['POST'])
+def sigin(request):
+    try:
+        email = request.data.get('email')
+        if email is None or len(email) == 0:
+            raise HttpException(errors.email_is_required)
+        password = request.data.get('password')
+        if email is None or len(email) == 0:
+            raise HttpException(errors.password_is_required)
+        user = authenticate(username=email, password=password)
+        if user is None:
+            raise HttpException(errors.authentication_failure)
+        payload = jwt_payload_handler(user)
+        token = jwt_encode_handler(payload)
+        return Response({'data': token}, status=status.HTTP_200_OK)
+    except HttpException as e:
+        return e.getResponse()
+    except Exception:
+        return HttpException(errors.internal_server_error).getResponse()
+
+
+@api_view(['POST'])
+def sigup(request):
+    try:
+        email = request.data.get('email')
+        if email is None or len(email) == 0:
+            raise HttpException(errors.email_is_required)
+        password = request.data.get('password')
+        if email is None or len(email) == 0:
+            raise HttpException(errors.password_is_required)
+        count = User.objects.filter(username=email).count()
+        if count > 0:
+            raise HttpException(errors.user_is_duplicated)
+        user = User.objects.create_user(
+            username=email, email=email, password=password)
+        payload = jwt_payload_handler(user)
+        token = jwt_encode_handler(payload)
+        return Response({'data': token}, status=status.HTTP_201_CREATED)
+    except HttpException as e:
+        return e.getResponse()
+    except Exception as e:
+        return HttpException(errors.internal_server_error).getResponse()
 
 
 class MenuList(APIView):
