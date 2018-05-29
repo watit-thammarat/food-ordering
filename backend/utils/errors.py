@@ -2,57 +2,62 @@ from rest_framework import status
 from rest_framework.response import Response
 
 
-name_is_required = {
+NAME_IS_REQUIRED = {
     'message': 'Name is required',
     'status': status.HTTP_400_BAD_REQUEST
 }
 
-menu_is_duplicated = {
+MENU_IS_DUPLICATED = {
     'message': 'Menu is duplicated',
     'status': status.HTTP_400_BAD_REQUEST
 }
 
-user_is_duplicated = {
+USER_IS_DUPLICATED = {
     'message': 'User is duplicated',
     'status': status.HTTP_400_BAD_REQUEST
 }
 
-email_is_required = {
+EMAIL_IS_REQUIRED = {
     'message': 'Email is required',
     'status': status.HTTP_400_BAD_REQUEST
 }
 
-password_is_required = {
+PASSWORD_IS_REQUIRED = {
     'message': 'Pasword is required',
     'status': status.HTTP_400_BAD_REQUEST
 }
 
-invalid_date = {
+INVALID_DATE = {
     'message': 'Invalid date',
     'status': status.HTTP_400_BAD_REQUEST
 }
 
-invalid_order_date = {
+INVALID_ORDER_DATE = {
     'message': 'Invalid order date',
     'status': status.HTTP_400_BAD_REQUEST
 }
 
-invalid_menu_id = {
+INVALID_MENU_ID = {
     'message': 'Invalid menu id',
     'status': status.HTTP_400_BAD_REQUEST
 }
 
-authentication_failure = {
+AUTHENTICATION_FAILURE = {
     'message': 'Invalid username and/or password',
     'status': status.HTTP_401_UNAUTHORIZED
 }
 
-invalid_admin = {
+INVALID_ADMIN = {
     'message': 'Invalid administrator',
     'status': status.HTTP_401_UNAUTHORIZED
 }
 
-internal_server_error = {
+RESOURCE_NOT_FOUND = {
+    'message': 'Resource not found',
+    'status': status.HTTP_404_NOT_FOUND
+}
+
+INTERNAL_SERVER_ERROR = {
     'message': 'Internal Server Error',
     'status': status.HTTP_500_INTERNAL_SERVER_ERROR
 }

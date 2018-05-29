@@ -2,7 +2,9 @@
 venv/
 *.pyc
 *.sqlite3
+backend/static/
 frontend/node_modules/
 frontend/npm-debug.log
 frontend/.nuxt/
 frontend/dist/
+frontend/package-lock.json
