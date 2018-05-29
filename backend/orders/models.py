@@ -7,6 +7,9 @@ class Menu(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
+    def __str__(self):
+        return self.name
+
 
 class Order(models.Model):
     order_date = models.DateField()
@@ -15,6 +18,10 @@ class Order(models.Model):
     user = models.ForeignKey(
         to=User, on_delete=models.CASCADE, related_name='orders')
     created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return '{} {} {}'.format(self.order_date, self.user.username,
+                                 self.menu.name)
 
     class Meta:
         unique_together = ('order_date', 'menu', 'user')

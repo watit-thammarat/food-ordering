@@ -26,7 +26,7 @@ def home(request):
 @api_view(AVAILABLE_METHODS)
 @permission_classes((AllowAny,))
 def catch_all(request, path):
-    return HttpException(errors.RESOURCE_NOT_FOUND).getResponse()
+    raise HttpException(errors.RESOURCE_NOT_FOUND)
 
 
 @api_view(['POST'])
