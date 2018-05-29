@@ -37,6 +37,11 @@ INVALID_ORDER_DATE = {
     'status': status.HTTP_400_BAD_REQUEST
 }
 
+INVALID_ORDER = {
+    'message': 'Invalid order',
+    'status': status.HTTP_400_BAD_REQUEST
+}
+
 INVALID_MENU_ID = {
     'message': 'Invalid menu id',
     'status': status.HTTP_400_BAD_REQUEST

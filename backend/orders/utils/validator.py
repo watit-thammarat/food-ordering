@@ -1,9 +1,9 @@
 from datetime import datetime, timedelta
 from django.utils import timezone
 
-from utils import errors
-from utils.http_exception import HttpException
 from food_ordering.settings import ORDER_DATE_DELTA
+from orders.utils import errors
+from orders.utils.http_exception import HttpException
 
 
 def validate_sign_up_sign_in_fields(request):
@@ -23,17 +23,17 @@ def validate_menu_name_field(request):
     return name
 
 
-def get_date_from_timestamp(request):
+def get_date_from_timestamp(timestamp):
     try:
-        ts = request.data.get('orderDate')
-        date = datetime.fromtimestamp(int(ts))
+        date = datetime.fromtimestamp(int(timestamp))
         return timezone.make_aware(date).date()
     except Exception:
         raise HttpException(errors.INVALID_DATE)
 
 
 def validate_order_date(request):
-    order_date = get_date_from_timestamp(request)
+    timestamp = request.data.get('orderDate')
+    order_date = get_date_from_timestamp(timestamp)
     start_date = timezone.make_aware(datetime.now()).date()
     end_date = start_date + timedelta(days=ORDER_DATE_DELTA)
     if order_date < start_date or order_date > end_date:
@@ -49,5 +49,5 @@ def validate_menu_id(request):
 
 
 def validate_admin(request):
-    if request.user.is_superuser:
+    if request.user.is_staff:
         raise HttpException(errors.INVALID_ADMIN)

@@ -7,5 +7,5 @@ class HttpException(Exception):
         self.message = error['message']
         self.status = error['status']
 
-    def getResponse(self):
+    def get_response(self):
         return Response({'detail': self.message}, status=self.status)

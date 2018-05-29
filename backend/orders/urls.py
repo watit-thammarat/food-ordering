@@ -1,10 +1,13 @@
 from django.conf.urls import url
-from orders.views import sigin, sigup, make_order, MenuList, MenuDetail
+from orders.views import (sigin, sigup, make_order,
+                          get_order, MenuList, MenuDetail, get_order_summary)
 
 urlpatterns = [
     url(r'^sign-in$', sigin),
     url(r'^sign-up$', sigup),
-    url(r'^order$', make_order),
-    url(r'^menu$', MenuList.as_view()),
-    url(r'^menu/(?P<id>[0-9]+)$', MenuDetail.as_view()),
+    url(r'^orders$', make_order),
+    url(r'^orders/(?P<timestamp>[0-9]+)/summary$', get_order_summary),
+    url(r'^orders/(?P<timestamp>[0-9]+)$', get_order),
+    url(r'^menus$', MenuList.as_view()),
+    url(r'^menus/(?P<id>[0-9]+)$', MenuDetail.as_view()),
 ]
