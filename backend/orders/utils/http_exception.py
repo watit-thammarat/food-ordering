@@ -8,4 +8,6 @@ class HttpException(Exception):
         self.status = error['status']
 
     def get_response(self):
-        return Response({'detail': self.message}, status=self.status)
+        response = Response({'detail': self.message}, status=self.status)
+        response['Cache-Control'] = 'max-age=0, must-revalidate'
+        return response

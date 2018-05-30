@@ -20,13 +20,17 @@ AVAILABLE_METHODS = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTION', 'HEAD']
 @api_view(AVAILABLE_METHODS)
 @permission_classes((AllowAny,))
 def home(request):
-    return Response({'data': 'Food Ordering Application'})
+    response = Response({'data': 'Food Ordering Application'})
+    response['Cache-Control'] = 'max-age=600'
+    return response
 
 
 @api_view(AVAILABLE_METHODS)
 @permission_classes((AllowAny,))
 def catch_all(request, path):
-    return HttpException(errors.RESOURCE_NOT_FOUND).get_response()
+    response = HttpException(errors.RESOURCE_NOT_FOUND).get_response()
+    response['Cache-Control'] = 'max-age=600'
+    return response
 
 
 @api_view(['POST'])
@@ -43,7 +47,9 @@ def make_order(request):
                                  user_id=user_id, menu_id=menu_id).delete()
             order = Order.objects.create(
                 order_date=order_date, user_id=user_id, menu_id=menu_id)
-        return Response({'data': view_models.get_order(order)})
+        response = Response({'data': view_models.get_order(order)})
+        response['Cache-Control'] = 'max-age=0, must-revalidate'
+        return response
     except HttpException as e:
         return e.get_response()
     except Exception as e:
@@ -59,7 +65,9 @@ def get_order_summary(request, timestamp):
         orders = Order.objects.filter(order_date=order_date).values(
             'menu__id', 'menu__name').annotate(
                 total=Count('menu__id')).order_by('total')
-        return Response({'data': view_models.get_order_summary(orders)})
+        response = Response({'data': view_models.get_order_summary(orders)})
+        response['Cache-Control'] = 'max-age=8'
+        return response
     except HttpException as e:
         return e.get_response()
     except Exception as e:
@@ -77,7 +85,9 @@ def get_order(request, timestamp):
             order_date=order_date, user_id=user_id)
         if (len(orders) > 1):
             raise HttpException(errors.INVALID_ORDER)
-        return Response({'data': view_models.get_order(orders[0])})
+        response = Response({'data': view_models.get_order(orders[0])})
+        response['Cache-Control'] = 'max-age=8'
+        return response
     except HttpException as e:
         return e.get_response()
     except Exception as e:
@@ -93,7 +103,9 @@ def sigin(request):
         if user is None:
             raise HttpException(errors.AUTHENTICATION_FAILURE)
         user_logged_in.send(sender=user.__class__, request=request, user=user)
-        return Response({'data': auth.create_jwt(user)})
+        response = Response({'data': auth.create_jwt(user)})
+        response['Cache-Control'] = 'max-age=0, must-revalidate'
+        return response
     except HttpException as e:
         return e.get_response()
     except Exception as e:
@@ -111,7 +123,9 @@ def sigup(request):
             username=email, email=email, password=password)
         user_logged_in.send(sender=user.__class__, request=request, user=user)
         data = {'data': auth.create_jwt(user)}
-        return Response(data, status=status.HTTP_201_CREATED)
+        response = Response(data, status=status.HTTP_201_CREATED)
+        response['Cache-Control'] = 'max-age=0, must-revalidate'
+        return response
     except HttpException as e:
         return e.get_response()
     except Exception as e:
@@ -129,7 +143,9 @@ class MenuList(APIView):
             if Menu.objects.filter(name=name).count() > 0:
                 raise HttpException(errors.MENU_IS_DUPLICATED)
             Menu.objects.create(name=name)
-            return Response({'data': 'OK'}, status=status.HTTP_201_CREATED)
+            response = Response({'data': 'OK'}, status=status.HTTP_201_CREATED)
+            response['Cache-Control'] = 'max-age=0, must-revalidate'
+            return response
         except HttpException as e:
             return e.get_response()
         except Exception as e:
@@ -139,7 +155,9 @@ class MenuList(APIView):
     def get(self, request):
         try:
             menu_list = Menu.objects.all()
-            return Response({'data': view_models.get_menu_list(menu_list)})
+            response = Response({'data': view_models.get_menu_list(menu_list)})
+            response['Cache-Control'] = 'max-age=8'
+            return response
         except Exception as e:
             logger.error(e.message)
             return HttpException(errors.INTERNAL_SERVER_ERROR).get_response()
@@ -158,7 +176,9 @@ class MenuDetail(APIView):
     def get(self, request, id):
         try:
             menu = self.get_object(id)
-            return Response({'data': view_models.get_menu(menu)})
+            response = Response({'data': view_models.get_menu(menu)})
+            response['Cache-Control'] = 'max-age=8'
+            return response
         except HttpException as e:
             return e.get_response()
         except Exception as e:
@@ -174,7 +194,9 @@ class MenuDetail(APIView):
             menu = self.get_object(id)
             menu.name = name
             menu.save()
-            return Response({'data': view_models.get_menu(menu)})
+            response = Response({'data': view_models.get_menu(menu)})
+            response['Cache-Control'] = 'max-age=0, must-revalidate'
+            return response
         except HttpException as e:
             return e.get_response()
         except Exception as e:
@@ -186,7 +208,9 @@ class MenuDetail(APIView):
             validator.validate_admin(request)
             menu = self.get_object(id)
             menu.delete()
-            return Response({'data': 'OK'})
+            response = Response({'data': 'OK'})
+            response['Cache-Control'] = 'max-age=0, must-revalidate'
+            return response
         except HttpException as e:
             return e.get_response()
         except Exception as e:
