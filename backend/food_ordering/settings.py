@@ -2,11 +2,9 @@ import os
 
 from food_ordering.constants import DEVELOPMENT, BETA
 
-env = os.getenv('PYTHON_ENV') or DEVELOPMENT
+PYTHON_ENV = os.getenv('PYTHON_ENV') or DEVELOPMENT
 
-print('==> {}'.format(env))
-
-if env == DEVELOPMENT:
+if PYTHON_ENV == DEVELOPMENT:
     from food_ordering.dev_settings import *
-elif env == BETA:
+elif PYTHON_ENV == BETA:
     from food_ordering.beta_setting import *

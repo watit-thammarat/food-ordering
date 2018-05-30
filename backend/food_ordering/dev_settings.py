@@ -17,6 +17,8 @@ DATABASES = {
     }
 }
 
+JWT_AUTH['JWT_SECRET_KEY'] = SECRET_KEY
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': True,
