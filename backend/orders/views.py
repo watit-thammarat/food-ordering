@@ -11,7 +11,8 @@ from django.contrib.auth.signals import user_logged_in
 
 from orders import view_models
 from orders.models import Menu, Order
-from orders.utils import errors, validator, auth, logger
+from orders.utils import errors, validator, auth
+from orders.utils.logger import Logger
 from orders.utils.http_exception import HttpException
 
 AVAILABLE_METHODS = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTION', 'HEAD']
@@ -53,7 +54,7 @@ def make_order(request):
     except HttpException as e:
         return e.get_response()
     except Exception as e:
-        logger.error(e.message)
+        Logger.log_exception(e)
         return HttpException(errors.INTERNAL_SERVER_ERROR).get_response()
 
 
@@ -71,7 +72,7 @@ def get_order_summary(request, timestamp):
     except HttpException as e:
         return e.get_response()
     except Exception as e:
-        logger.error(e.message)
+        Logger.log_exception(e)
         return HttpException(errors.INTERNAL_SERVER_ERROR).get_response()
 
 
@@ -83,15 +84,16 @@ def get_order(request, timestamp):
         user_id = request.user.id
         orders = Order.objects.select_related('menu').filter(
             order_date=order_date, user_id=user_id)
-        if (len(orders) > 1):
+        if len(orders) > 1:
             raise HttpException(errors.INVALID_ORDER)
-        response = Response({'data': view_models.get_order(orders[0])})
+        data = None if len(orders) == 0 else view_models.get_order(orders[0])
+        response = Response({'data': data})
         response['Cache-Control'] = 'max-age=8'
         return response
     except HttpException as e:
         return e.get_response()
     except Exception as e:
-        logger.error(e.message)
+        Logger.log_exception(e)
         return HttpException(errors.INTERNAL_SERVER_ERROR).get_response()
 
 
@@ -102,14 +104,15 @@ def sigin(request):
         user = authenticate(username=email, password=password)
         if user is None:
             raise HttpException(errors.AUTHENTICATION_FAILURE)
-        user_logged_in.send(sender=user.__class__, request=request, user=user)
+        user_logged_in.send(sender=user.__class__,
+                            request=request, user=user)
         response = Response({'data': auth.create_jwt(user)})
         response['Cache-Control'] = 'max-age=0, must-revalidate'
         return response
     except HttpException as e:
         return e.get_response()
     except Exception as e:
-        logger.error(e.message)
+        Logger.log_exception(e)
         return HttpException(errors.INTERNAL_SERVER_ERROR).get_response()
 
 
@@ -129,7 +132,7 @@ def sigup(request):
     except HttpException as e:
         return e.get_response()
     except Exception as e:
-        logger.error(e.message)
+        Logger.log_exception(e)
         return HttpException(errors.INTERNAL_SERVER_ERROR).get_response()
 
 
@@ -149,7 +152,7 @@ class MenuList(APIView):
         except HttpException as e:
             return e.get_response()
         except Exception as e:
-            logger.error(e.message)
+            Logger.log_exception(e)
             return HttpException(errors.INTERNAL_SERVER_ERROR).get_response()
 
     def get(self, request):
@@ -159,7 +162,7 @@ class MenuList(APIView):
             response['Cache-Control'] = 'max-age=8'
             return response
         except Exception as e:
-            logger.error(e.message)
+            Logger.log_exception(e)
             return HttpException(errors.INTERNAL_SERVER_ERROR).get_response()
 
 
@@ -182,7 +185,7 @@ class MenuDetail(APIView):
         except HttpException as e:
             return e.get_response()
         except Exception as e:
-            logger.error(e.message)
+            Logger.log_exception(e)
             return HttpException(errors.INTERNAL_SERVER_ERROR).get_response()
 
     def put(self, request, id):
@@ -200,7 +203,7 @@ class MenuDetail(APIView):
         except HttpException as e:
             return e.get_response()
         except Exception as e:
-            logger.error(e.message)
+            Logger.log_exception(e)
             return HttpException(errors.INTERNAL_SERVER_ERROR).get_response()
 
     def delete(self, request, id):
@@ -214,5 +217,5 @@ class MenuDetail(APIView):
         except HttpException as e:
             return e.get_response()
         except Exception as e:
-            logger.error(e.message)
+            Logger.log_exception(e)
             return HttpException(errors.INTERNAL_SERVER_ERROR).get_response()

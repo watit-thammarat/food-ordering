@@ -42,12 +42,13 @@ def validate_order_date(request):
 
 
 def validate_menu_id(request):
-    menu_id = request.data.get('menuId')
-    if menu_id is None or type(menu_id) != int:
+    try:
+        menu_id = request.data.get('menuId')
+        return int(menu_id)
+    except Exception:
         raise HttpException(errors.INVALID_MENU_ID)
-    return menu_id
 
 
 def validate_admin(request):
-    if request.user.is_staff:
+    if not request.user.is_staff:
         raise HttpException(errors.INVALID_ADMIN)
