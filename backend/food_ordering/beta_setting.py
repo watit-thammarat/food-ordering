@@ -1,5 +1,8 @@
 from food_ordering.common_settings import *
 from food_ordering.constants import APP_LOG
+from food_ordering.ec2 import get_linux_ec2_private_ip
+
+PRIVATE_IP = get_linux_ec2_private_ip()
 
 LOG_LEVEL = os.getenv('LOG_LEVEL') or 'INFO'
 
@@ -10,11 +13,11 @@ DEBUG = False
 ALLOWED_HOSTS = [
     'food-ordering-beta.ap-southeast-1.elasticbeanstalk.com',
     'localhost',
-    'api.dekdurian.com',
-    '172.31.34.225',
-    'connect.rom.miui.com',
-    '52.221.110.147'
+    '.dekdurian.com'
 ]
+
+if PRIVATE_IP:
+    ALLOWED_HOSTS.append(PRIVATE_IP)
 
 DATABASES = {
     'default': {
