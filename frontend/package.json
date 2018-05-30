@@ -8,10 +8,11 @@
     "dev": "nuxt",
     "build": "nuxt build",
     "start": "nuxt start",
-    "generate": "nuxt generate"
+    "generate": "nuxt generate",
+    "s3": "aws s3 cp dist s3://www.dekdurian.com/ --recursive",
+    "deploy": "npm run build && npm run s3"
   },
   "dependencies": {
-    "axios": "^0.18.0",
     "nuxt": "^1.0.0"
   },
   "devDependencies": {
