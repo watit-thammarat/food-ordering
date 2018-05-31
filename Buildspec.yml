@@ -1,0 +1,19 @@
+version 0.2
+env:
+  variables:
+    PYTHON_ENV: TEST
+  phases:
+    install:
+      commands:
+        - apt-get update -y
+    pre_build:
+      commands:
+        - pip install -r backend/requirements.test.txt
+    post_build:
+      commands:
+        - python backend/manage.py collectstatic
+        - echo Build completed on `date`
+  artifacts:
+    files:
+      - '**/*'
+    base-directory: backend
