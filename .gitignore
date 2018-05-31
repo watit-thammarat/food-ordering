@@ -3,6 +3,7 @@ venv/
 *.pyc
 *.sqlite3
 backend/static/
+backend/.pytest_cache/
 frontend/node_modules/
 frontend/npm-debug.log
 frontend/.nuxt/

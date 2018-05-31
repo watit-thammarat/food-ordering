@@ -1,3 +1,6 @@
-from django.test import TestCase
+from rest_framework.test import APITestCase
 
-# Create your tests here.
+
+class SimpleTests(APITestCase):
+    def test_addition(self):
+        assert 1 == 2
