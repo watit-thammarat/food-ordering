@@ -9,6 +9,9 @@ phases:
   pre_build:
     commands:
       - pip install -r backend/requirements_test.txt
+  build:
+    commands:
+      - pytest backend
   post_build:
     commands:
       - python backend/manage.py collectstatic
