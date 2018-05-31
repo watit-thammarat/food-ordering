@@ -1,0 +1,20 @@
+branch-defaults:
+  default:
+    environment: FoodOrdering-beta
+environment-defaults:
+  FoodOrdering-beta:
+    branch: null
+    repository: null
+global:
+  application_name: Food Ordering
+  default_ec2_keyname: webapp
+  default_platform: arn:aws:elasticbeanstalk:ap-southeast-1::platform/Python 3.6 running
+    on 64bit Amazon Linux/2.7.0
+  default_region: ap-southeast-1
+  include_git_submodules: true
+  instance_profile: null
+  platform_name: null
+  platform_version: null
+  profile: null
+  sc: null
+  workspace_type: Application
