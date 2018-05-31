@@ -47,7 +47,7 @@ INVALID_MENU_ID = {
     'status': status.HTTP_400_BAD_REQUEST
 }
 
-AUTHENTICATION_FAILURE = {
+AUTHENTICATION_FAILED = {
     'message': 'Invalid username and/or password',
     'status': status.HTTP_401_UNAUTHORIZED
 }
