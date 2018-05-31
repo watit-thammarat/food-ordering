@@ -1,4 +1,4 @@
-from food_ordering.common_settings import *
+from food_ordering.settings_common import *
 
 SECRET_KEY = 'xtcx4%a8m4+(_20c%%j9ya=kj)11lry*4)ej!04s1s8#0$s65_'
 

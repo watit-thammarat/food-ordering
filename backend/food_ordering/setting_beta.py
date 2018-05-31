@@ -1,4 +1,4 @@
-from food_ordering.common_settings import *
+from food_ordering.settings_common import *
 from food_ordering.constants import APP_LOG
 from food_ordering.ec2 import get_linux_ec2_private_ip
 
